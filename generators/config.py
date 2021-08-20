@@ -207,7 +207,17 @@ CUSTOM_OVERLOAD_TYPES = {
     ("PCA", "PointCloud"): "pcl::PCLBase<PointT>::PointCloud",
     ("PCA", "preserve"): "Class::preserve",
 
-    ("PolynomialCalculationsT<real>", "BivariatePolynomialT<real>"): "pcl::BivariatePolynomialT<real>"
+    ("PolynomialCalculationsT", "BivariatePolynomialT<real>"): "pcl::BivariatePolynomialT<real>",
+    ("NormalGenerator", "Parameters"): "typename Class::Parameters",
+    ("UniformGenerator", "Parameters"): "typename Class::Parameters",
+    ("CloudGenerator", "GeneratorParameters"): "typename Class::GeneratorParameters",
+
+    ("VectorAverage", "VectorType"): "typename Class::VectorType",
+
+    ("Convolution", "PointCloudOut"): "typename Class::PointCloudOut",
+    ("Convolution3D", "PointCloudOut"): "typename Class::PointCloudOut",
+    ("Filter", "PointCloud"): "typename Class::PointCloud",
+    ("VoxelGridCovariance", "std::vector<LeafConstPtr>"): "std::vector<typename Class::LeafConstPtr>",
 }
 
 # types that are explicitly considered as part of the "pcl" namespace
@@ -487,6 +497,8 @@ HEADERS_TO_SKIP = [
     ("filters", "conditional_removal.h"),
     # todo: parser error for ConditionalRemoval (int extract_removed_indices = false) :
     ("filters", "model_outlier_removal.h"),  # todo: boost::function as parameter
+
+    ("filters", "functor_filter.h"),  # using a c++14 feature that CppHeaderParser seems unhappy with
 ]
 
 FUNCTIONS_TO_SKIP = [
@@ -595,4 +607,9 @@ METHODS_TO_SKIP = [
     ("OctreePointCloudVoxelCentroid", "getVoxelCentroidAtPoint"),  # error: ‘genOctreeKeyforPoint’ was not declared in this scope
 
     ("RSDEstimation", "getHistograms"),  # must declare class for return value: boost::shared_ptr<std::vector<Eigen::MatrixXf, Eigen::aligned_allocator<Eigen::MatrixXf> > >
+
+    ("VFHEstimation", "nr_bins_vp_"),  # CppHeaderParser bug is picking up the initializer as a method
+
+    ("PassThrough", 'getFilterLimitsNegative'),  # deprecated
+    ("PassThrough", 'setFilterLimitsNegative'),  # deprecated
 ]

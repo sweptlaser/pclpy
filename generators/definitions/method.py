@@ -106,7 +106,9 @@ class Method:
             custom = CUSTOM_OVERLOAD_TYPES.get((parent_name, type_))
         type_no_template = type_[:type_.find("<")] if "<" in type_ else type_
         template_string = self.cppmethod.get("parent", {}).get("template", "")
-        if type_ == "pcl::PCLPointCloud2::" and param["name"].startswith("Const"):
+        if custom:
+            type_ = custom
+        elif type_ == "pcl::PCLPointCloud2::" and param["name"].startswith("Const"):
             type_ = type_ + param["name"]  # fix for CppHeaderParser bug
         elif type_.startswith("pcl::"):
             type_ = make_namespace_class("pcl", type_)
@@ -118,8 +120,6 @@ class Method:
             pass
         elif type_no_template in GLOBAL_PCL_IMPORTS:
             pass
-        elif custom:
-            type_ = custom
         elif any(type_.startswith(t) for t in EXTERNAL_INHERITANCE):
             pass
         elif prefix == "pcl":
@@ -323,7 +323,7 @@ def split_methods_by_type(methods: List[CppMethod],
 
 def filter_template_types(template_string, keep=None, keep_all=False):
     if keep is None:
-        keep = ["typename", "class", "unsigned"]
+        keep = ["typename", "class", "unsigned", "int"]
     if not template_string:
         return tuple()
     types = template_string.split(", ")
