@@ -2,7 +2,7 @@ name: pclpy
 channels:
   - conda-forge
 dependencies:
-  - pcl=1.9.1
+  - pcl=1.11.1
   - eigen
   - numpy
   - laspy

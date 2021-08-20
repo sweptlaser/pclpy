@@ -21,11 +21,12 @@ if platform.system() == "Windows":
     else:
         PCL_BASE = join(os.environ["PCL_ROOT"], "include", "pcl-1.8", "pcl")
 elif CONDA:
-    PCL_BASE = join(sys.prefix, "include", "pcl-1.9", "pcl")
+    PCL_BASE = join(sys.prefix, "include", "pcl-1.11", "pcl")
 else:
     PCL_BASE = join(get_include_dir(), "pcl")
 
 common_includes = """
+#include <boost/shared_ptr.hpp>
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/eigen.h>
@@ -63,7 +64,7 @@ MODULES_TO_BUILD = [
     'stereo',
     'surface',
     'tracking',
-    # 'visualization',
+    'visualization',
 ]
 # skipped for now:
 # , 'ml', 'people', 'outofcore', 'registration']
@@ -191,10 +192,27 @@ CUSTOM_OVERLOAD_TYPES = {
 
     ("DisparityMapConverter", "PointCloud"): "pcl::PointCloud<PointT>",
     ("PointCloud", "PointCloud<PointT>"): "pcl::PointCloud<PointT>",
+    ("PointCloud", "Indices"): "typename pcl::Indices",
+    ("PointCloud", "iterator"): "typename Class::iterator",
+
+    ("CloudIterator", "PointCloud<PointT>"): "pcl::PointCloud<PointT>",
+    ("CloudIterator", "Indices"): "typename pcl::Indices",
+    ("CloudIterator", "PointIndices"): "typename pcl::PointIndices",
+    ("CloudIterator", "Correspondences"): "typename pcl::Correspondences",
+    ("ConstCloudIterator", "PointCloud<PointT>"): "pcl::PointCloud<PointT>",
+    ("ConstCloudIterator", "Indices"): "typename pcl::Indices",
+    ("ConstCloudIterator", "PointIndices"): "typename pcl::PointIndices",
+    ("ConstCloudIterator", "Correspondences"): "typename pcl::Correspondences",
+
+    ("PCA", "PointCloud"): "pcl::PCLBase<PointT>::PointCloud",
+    ("PCA", "preserve"): "Class::preserve",
+
+    ("PolynomialCalculationsT<real>", "BivariatePolynomialT<real>"): "pcl::BivariatePolynomialT<real>"
 }
 
-# types that are explicitely considered as part of the "pcl" namespace
+# types that are explicitly considered as part of the "pcl" namespace
 GLOBAL_PCL_IMPORTS = [
+    "Indices",
     "IndicesPtr",
     "IndicesConstPtr",
     "PointIndicesConstPtr",
@@ -212,6 +230,7 @@ GLOBAL_PCL_IMPORTS = [
     "ReferenceFrame",
     "GASDSignature512",
     "GASDSignature984",
+    "index_t",
 ]
 
 EXPLICIT_IMPORTED_TYPES = [
@@ -403,6 +422,8 @@ HEADERS_TO_SKIP = [
     ("ml", "multi_channel_2d_comparison_feature_handler.h"),  # can't find class FeatureHandlerCodeGenerator ??
     ("", "pcl_tests.h"),
     ("", "for_each_type.h"),
+    ("", "memory.h"),
+    ("", "type_traits.h"),
 
     ("2d", "kernel.h"),  # missing impl/kernel.hpp in Windows release
     ("2d", "edge.h"),  # missing impl/kernel.hpp in Windows release
@@ -537,6 +558,9 @@ METHODS_TO_SKIP = [
     # ("class", "method")
 
     ("PointCloud", "insert"),  # templated InputIterator
+    ("PointCloud", "assign"),  # templated InputIt
+    ("PointCloud", "emplace"),  # templated Args
+    ("PointCloud", "emplace_back"),  # templated Args
 
     ("ASCIIReader", "setInputFields"),
     ("ASCIIReader", "read"),  # PCLPointCloud2 not implemented for now

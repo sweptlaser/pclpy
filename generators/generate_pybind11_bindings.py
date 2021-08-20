@@ -183,7 +183,7 @@ def filter_module_level_functions(functions: List[CppMethod]):
 
 
 def get_variables(header):
-    variables = [v for v in header.variables if v.get("defaultValue")]
+    variables = [v for v in header.variables if v.get("defaultValue") and 'using' != v.get('type')]
     variables = sorted(variables, key=lambda v: v["name"])
     return variables
 
@@ -474,7 +474,8 @@ def main():
 
     if not windows:
         skip_macros = ["_MSC_VER"]
-        skip_modules = ["visualization"]
+        #skip_modules = ["visualization"]
+        skip_modules = []
 
     all_headers = get_headers(skip_modules=skip_modules)
     not_every_point_type = "--not-every-point-type" in sys.argv

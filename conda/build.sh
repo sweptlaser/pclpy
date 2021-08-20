@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-version="1.9.1"
+version="1.11.1"
 
 
 if [[ ! -d "pcl-pcl-$version" ]]; then

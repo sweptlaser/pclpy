@@ -56,7 +56,7 @@ class Method:
                     param["type"] += " &"
                     param["reference"] = 1
                 type_ = param["type"] if not param["unresolved"] else param["raw_type"]
-                
+
                 if "boost::function<double(constdouble)" in type_:  # fix for CppHeaderParser bug
                     type_ = type_.replace('constdouble', 'const double')
 
@@ -168,6 +168,12 @@ class Method:
         #                                                  "k_sqr_distances"_a
         #                                                  )
         #                                                  """
+        elif 'static_assert' == self.cppmethod['name']:
+            message = "Ignoring static_assert when it shows up"
+            ret_val = "// " + message
+        elif 'PCL_DEPRECATED' == self.name:
+            message = "Skipping PCL_DEPRECATED element"
+            ret_val = "// " + message
         elif any("**" in param["type"].replace(" ", "") for param in params):
             message = "Double pointer arguments are not supported by pybind11 (%s)" % (self.cppmethod["name"],)
             ret_val = "// " + message

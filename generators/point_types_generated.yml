@@ -209,6 +209,54 @@ FieldComparison:
   - PointXYZI
   - PointXYZRGBA
   - PointNormal
+FilterIndices:
+- - PointXYZ
+  - PointXYZI
+  - PointXYZL
+  - Label
+  - PointXYZRGBA
+  - PointXYZRGB
+  - PointXYZRGBL
+  - PointXYZHSV
+  - PointXY
+  - InterestPoint
+  - Axis
+  - Normal
+  - PointNormal
+  - PointXYZRGBNormal
+  - PointXYZINormal
+  - PointXYZLNormal
+  - PointWithRange
+  - PointWithViewpoint
+  - MomentInvariants
+  - PrincipalRadiiRSD
+  - Boundary
+  - PrincipalCurvatures
+  - PFHSignature125
+  - PFHRGBSignature250
+  - PPFSignature
+  - CPPFSignature
+  - PPFRGBSignature
+  - NormalBasedSignature12
+  - FPFHSignature33
+  - VFHSignature308
+  - GASDSignature512
+  - GASDSignature984
+  - GASDSignature7992
+  - GRSDSignature21
+  - ESFSignature640
+  - BRISKSignature512
+  - Narf36
+  - IntensityGradient
+  - PointWithScale
+  - PointSurfel
+  - ShapeContext1980
+  - UniqueShapeContext1960
+  - SHOT352
+  - SHOT1344
+  - PointUV
+  - ReferenceFrame
+  - PointDEM
 FrustumCulling:
 - - PointXYZ
   - PointXYZI
@@ -757,6 +805,21 @@ PlanarPolygonFusion:
   - PointXYZI
   - PointXYZRGBA
   - PointXYZRGB
+PointCloudGeometryHandlerSurfaceNormal:
+- - Normal
+  - PointNormal
+  - PointXYZRGBNormal
+PointCloudGeometryHandlerXYZ:
+- - PointSurfel
+  - PointXYZ
+  - PointXYZL
+  - PointXYZI
+  - PointXYZRGB
+  - PointXYZRGBA
+  - PointNormal
+  - PointXYZRGBNormal
+  - PointXYZRGBL
+  - PointWithRange
 PointDataAtOffset:
 - - PointXYZ
   - PointXYZI
@@ -1183,6 +1246,11 @@ applyMorphologicalOperator:
   - PointXYZI
   - PointXYZRGBA
   - PointNormal
+computeApproximateCovariances:
+- - - PointXYZ
+    - PointXYZI
+    - PointXYZRGBA
+  - - Normal
 extractEuclideanClusters:
 - - PointXYZ
   - PointXYZI

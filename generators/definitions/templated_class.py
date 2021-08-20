@@ -109,6 +109,8 @@ class ClassDefinition:
                 a = s.append
                 a("{ind}{template}")
                 a("{ind}void define{sub}{name}(py::module &m, std::string const & suffix) {ob}")
+                if self.class_["namespace"]:
+                    a("{ind}{i}using namespace %s;" % self.class_["namespace"])
                 templated_name = "{name}<%s>;" % types
                 a("{ind}{i}using Class = typename {namespace}%s" % templated_name)
                 for typedef in self.typedefs():
@@ -118,6 +120,8 @@ class ClassDefinition:
         if not self.is_templated:
             a = s.append
             a("{ind}void define{sub}{name}(py::module &m) {ob}")
+            if self.class_["namespace"]:
+                a("{ind}{i}using namespace %s;" % self.class_["namespace"])
             a("{ind}{i}using Class = {namespace}{name}{empty_template};")
             for typedef in self.typedefs():
                 a("{ind}{i}using %s = Class::%s;" % (typedef, typedef))
@@ -146,7 +150,7 @@ class ClassDefinition:
         s += ["{ind}%s;" % v.to_str("Class", class_var_name=self.CLS_VAR) for v in self.variables]
         templated_methods = [m for m in self.other_methods if m.templated_types]
         s += ["{ind}%s;" % m.to_str("Class", class_var_name=self.CLS_VAR) for m in self.other_methods
-              if not m in templated_methods]
+              if m not in templated_methods]
         s += ["{ind}%s;" % m for method in templated_methods for m in
               method.to_str("Class", class_var_name=self.CLS_VAR)]
         if self.class_name in EXTRA_FUNCTIONS:

@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Dict, Set
 
-from generators.config import GLOBAL_PCL_IMPORTS
+from generators.config import CUSTOM_OVERLOAD_TYPES, GLOBAL_PCL_IMPORTS
 
 all_default_types_by_namespace = defaultdict(set)
 all_return_values = defaultdict(set)
@@ -11,6 +11,13 @@ def parameter_default_value(param):
     val = param.get("defaultValue", "")
     if val:
         namespace = param["method"]["namespace"]
+
+        parent_name = param["method"].get("parent", {}).get("name")
+        if parent_name:
+            custom = CUSTOM_OVERLOAD_TYPES.get((parent_name, val))
+            if custom:
+                val = custom
+
         if any(val.startswith(g) for g in GLOBAL_PCL_IMPORTS):
             val = "pcl::" + val
         all_default_types_by_namespace[namespace].add(param["raw_type"])

@@ -58,6 +58,8 @@ class Instantiations:
         a = s.append
         i = INDENT
         a("{ind}void define{sub}{name}Classes(py::module &{base}) {ob}")
+        # TODO: bit of a hack but I can't find the namespace dynamically?
+        a("using namespace pcl;")
         for var in self.variables:
             a("{ind}{i}%s" % define_variable(var))
         for enum in self.enums:
