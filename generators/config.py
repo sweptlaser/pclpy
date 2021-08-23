@@ -48,22 +48,22 @@ PYBIND11_DECLARE_HOLDER_TYPE(T, boost::shared_ptr<T>);
 # ----------------------
 
 MODULES_TO_BUILD = [
-    '2d',
+    #'2d',
     'common',
     'features',
-    'geometry',
-    'filters',
+    #'geometry',
+    #'filters',
     'io',
     'kdtree',
-    'keypoints',
-    'octree',
-    'recognition',
-    'sample_consensus',
-    'search',
-    'segmentation',
-    'stereo',
-    'surface',
-    'tracking',
+    #'keypoints',
+    #'octree',
+    #'recognition',
+    #'sample_consensus',
+    #'search',
+    #'segmentation',
+    #'stereo',
+    #'surface',
+    #'tracking',
     'visualization',
 ]
 # skipped for now:
@@ -218,6 +218,12 @@ CUSTOM_OVERLOAD_TYPES = {
     ("Convolution3D", "PointCloudOut"): "typename Class::PointCloudOut",
     ("Filter", "PointCloud"): "typename Class::PointCloud",
     ("VoxelGridCovariance", "std::vector<LeafConstPtr>"): "std::vector<typename Class::LeafConstPtr>",
+
+    ("PointCloudImageExtractorFromLabelField", "int"): "Class::ColorMode",  # a fairly gross hack to catch the enum
+    ("PointCloudImageExtractorWithScaling", "int"): "Class:ScalingMethod",  # a fairly gross hack to catch the enum
+    ("PointCloudImageExtractorFromCurvatureField", "ScalingMethod"): "Class::ScalingMethod",
+    ("PointCloudImageExtractorFromIntensityField", "ScalingMethod"): "Class::ScalingMethod",
+    ("PointCloudImageExtractorFromZField", "ScalingMethod"): "Class::ScalingMethod",
 }
 
 # types that are explicitly considered as part of the "pcl" namespace
@@ -426,6 +432,7 @@ HEADERS_TO_SKIP = [
     # ("module", "header")
     ("io", "pxc_grabber.h"),  # deprecated
     ("io", "dinast_grabber.h"),
+    ("io", "fotonic_grabber.h"),  # no longer supported
     ("", "sse.h"),  # don't need that
     ("", "point_representation.h"),  # I could be wrong, but this seems covered in python with the buffer protocol..
     ("", "conversions.h"),  # can't find overloaded functions
