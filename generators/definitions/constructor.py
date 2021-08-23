@@ -48,6 +48,12 @@ class Constructor:
             type_only_last_element = type_.split("::")[-1]
             class_with_param_name = (param["method"]["name"], param["raw_type"])
             class_typedefs = param["method"]["parent"]["typedefs"]["public"]
+
+            class_inherits = param["method"]["parent"].get("inherits")
+            parent_is_template = (class_inherits and any(all(c in p["class"] for c in "<>") for p in class_inherits))
+            needs_typename = parent_is_template and not (
+                        type_ in param["type"] and type_ in ["bool", "float", "double", "int", "unsigned int"])
+
             custom = CUSTOM_OVERLOAD_TYPES.get((param["method"]["parent"]["name"], type_))
             if custom:
                 type_ = custom
@@ -60,7 +66,8 @@ class Constructor:
                 type_ = type_only_last_element
             elif class_with_param_name in INHERITED_ENUMS:
                 type_ = "Class::" + type_only_last_element
-            if all(c in type_ for c in "<>"):
+
+            if all(c in type_ for c in "<>") or needs_typename:
                 type_ = "typename " + type_
             if param.get("pointer"):
                 type_ += "*"
